@@ -182,6 +182,17 @@ export default function MyFeedbacksPage() {
           </div>
         )}
       </div>
+
+      {/* 管理员入口（隐蔽，底部小字） */}
+      <div className="flex justify-center py-8">
+        <div
+          onClick={() => Taro.navigateTo({url: '/pages/login/index'})}
+          className="flex items-center gap-1"
+        >
+          <div className="i-mdi-shield-key text-xl text-muted-foreground" />
+          <span className="text-muted-foreground text-xl">管理员入口</span>
+        </div>
+      </div>
     </div>
   )
 }
