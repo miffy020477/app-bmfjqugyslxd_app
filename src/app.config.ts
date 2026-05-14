@@ -1,29 +1,39 @@
-const pages = ['pages/home/index', 'pages/login/index']
+const pages = [
+  'pages/submit/index',
+  'pages/my-feedbacks/index',
+  'pages/feedback-detail/index',
+  'pages/login/index',
+  'pages/admin/list/index',
+  'pages/admin/detail/index',
+]
 
-//  To fully leverage TypeScript's type safety and ensure its correctness, always enclose the configuration object within the global defineAppConfig helper function.
 export default defineAppConfig({
   pages,
   tabBar: {
-    // List requires at least 2 items and at most 5 items
+    color: '#666666',
+    selectedColor: '#1565C0',
+    backgroundColor: '#FFFFFF',
+    borderStyle: 'black',
     list: [
       {
-        pagePath: 'pages/home/index',
-        text: 'Home'
-      }
-      // {
-      //     pagePath: 'pages/welcome/index',
-      //     text: 'welcome'
-      // }
-    ]
+        pagePath: 'pages/submit/index',
+        text: '投诉反馈',
+        iconPath: './assets/icons/submit_unselected.png',
+        selectedIconPath: './assets/icons/submit_selected.png',
+      },
+      {
+        pagePath: 'pages/my-feedbacks/index',
+        text: '我的反馈',
+        iconPath: './assets/icons/list_unselected.png',
+        selectedIconPath: './assets/icons/list_selected.png',
+      },
+    ],
   },
   window: {
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'WeChat',
-    navigationBarTextStyle: 'black'
+    navigationBarBackgroundColor: '#1565C0',
+    navigationBarTitleText: '派出所直通反馈',
+    navigationBarTextStyle: 'white',
   },
-  // Location APIs: Use 'getFuzzyLocation' for fuzzy location (cannot combine with precise APIs),
-  // or use precise APIs: 'getLocation', 'onLocationChange', 'startLocationUpdate', 'chooseLocation', 'choosePoi', 'chooseAddress'
-  // Background location: 'startLocationUpdateBackground'. Other values are strictly prohibited.
-  // requiredPrivateInfos: []
+  permission: {},
 })

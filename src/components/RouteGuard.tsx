@@ -3,8 +3,13 @@ import Taro, {useDidShow} from '@tarojs/taro'
 import type {TabBarItem} from '@tarojs/taro'
 import {useAuth} from '@/contexts/AuthContext'
 
-// Public pages that don't require authentication
-const PUBLIC_PAGE_PATHS = ['/pages/login/index']
+// 不需要认证的公开页面
+const PUBLIC_PAGE_PATHS = [
+  '/pages/login/index',
+  '/pages/submit/index',
+  '/pages/my-feedbacks/index',
+  '/pages/feedback-detail/index',
+]
 
 const LOGIN_PAGE_PATH = '/pages/login/index'
 

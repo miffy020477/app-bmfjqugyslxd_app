@@ -2,19 +2,54 @@ import {createContext, useContext, useEffect, useState, type ReactNode} from 're
 import Taro from '@tarojs/taro'
 import {supabase} from '@/client/supabase'
 import type {User} from '@supabase/supabase-js'
+import type {Profile} from '@/db/types'
 
-export interface Profile {
-   [key: string]: unknown;
-}
+export type {Profile}
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const {data, error} = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle()
 
   if (error) {
-    console.error('Failed to fetch user profile:', error)
+    console.error('获取用户档案失败:', error)
     return null
   }
   return data
+}
+
+// 匿名登录：根据设备凭证ID自动登录
+export async function signInAnonymously(): Promise<{error: Error | null}> {
+  try {
+    let credentialId = Taro.getStorageSync('anon_credential_id')
+    if (!credentialId) {
+      // 生成新的设备凭证ID
+      const arr = new Uint8Array(16)
+      for (let i = 0; i < 16; i++) {
+        arr[i] = Math.floor(Math.random() * 256)
+      }
+      const hex = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('')
+      credentialId = `${hex.slice(0,8)}-${hex.slice(8,12)}-4${hex.slice(13,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`
+      Taro.setStorageSync('anon_credential_id', credentialId)
+    }
+
+    const {data, error} = await supabase.functions.invoke('anon-auth', {
+      body: {credential_id: credentialId},
+    })
+
+    if (error) {
+      const errMsg = (await error?.context?.text?.()) || error.message
+      throw new Error(errMsg)
+    }
+
+    const {error: verifyError} = await supabase.auth.verifyOtp({
+      token_hash: data.hashed_token,
+      type: 'magiclink',
+    })
+
+    if (verifyError) throw verifyError
+    return {error: null}
+  } catch (err) {
+    return {error: err as Error}
+  }
 }
 
 interface AuthContextType {
